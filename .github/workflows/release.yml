@@ -1,9 +1,9 @@
-name: Release
+name: Build
 
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
   build:
@@ -22,8 +22,10 @@ jobs:
       - name: Build
         run: mvn package
 
+  # # Make a Github Release, only if this is a push on `main`
   # create-release:
   #   name: Create GitHub Release
+  #   if: github.ref == 'refs/heads/main'
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout code
