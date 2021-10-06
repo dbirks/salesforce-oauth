@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  build:
+    name: Build
+    # Double-check that the PR is a merged PR.
+    #   https://stackoverflow.com/a/67833464/7733616
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build
+        run: mvn package
+
+  # create-release:
+  #   name: Create GitHub Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+  #     - name: Create GitHub Release
+  #       uses: actions/create-release@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: v0.0.0
+  #         release_name: Release v0.0.0
+  #         body_path: docs/changelogs/0.0.0.md
+  #         draft: false
+  #         prerelease: false
