@@ -2,6 +2,8 @@ name: Build and release
 
 on:
   push:
+    branches:
+      - '**'
 
 jobs:
   # Build on a push to any branch
