@@ -1,0 +1,31 @@
+name: Build pull requests
+
+on:
+  pull_request:
+
+jobs:
+  # Build on a push to any branch
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: "11"
+      - name: Build
+        run: |
+          mvn \
+            -Dsalesforce.api-base-url=${{ secrets.SALESFORCE_BASE_URL }} \
+            -Dsalesforce.api.client-id=${{ secrets.SALESFORCE_OAUTH_CLIENT_ID }} \
+            -Dsalesforce.api.client-secret=${{ secrets.SALESFORCE_OAUTH_CLIENT_SECRET }} \
+            -Dsalesforce.jwt.audience=${{ secrets.SALESFORCE_JWT_AUDIENCE }} \
+            -Dsalesforce.jwt.rsa.password=${{ secrets.SALESFORCE_OAUTH_RSA_PASSWORD }} \
+            -Dsalesforce.jwt.rsa.private-key=${{ secrets.SALESFORCE_OAUTH_PRIVATE_KEY_BASE64 }} \
+            -Dsalesforce.jwt.rsa.public-key=${{ secrets.SALESFORCE_OAUTH_PUBLIC_KEY_BASE64 }} \
+            -Dsalesforce.jwt.subject=${{ secrets.SALESFORCE_USERNAME }} \
+            -DskipTests=true \
+            verify
